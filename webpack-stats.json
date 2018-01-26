@@ -1,1 +1,1 @@
-{"status":"done","chunks":{"main":[{"name":"main-315df4b2f5abf7716c38.js","path":"/home/viral/Code/Django/Unicode/DJ-Comps-Skill-Finder/assets/bundles/main-315df4b2f5abf7716c38.js"}]}}
+{"status":"error","error":"ModuleParseError","message":"Module parse failed: D:\\Unicode\\new2\\DJ-Comps-Skill-Finder\\assets\\js\\index.js Unexpected token (7:2)\nYou may need an appropriate loader to handle this file type.\n| \r\n| ReactDOM.render(\r\n|   <App />,\r\n|   document.getElementById('root')\r\n| );\r"}

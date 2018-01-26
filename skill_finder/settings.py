@@ -23,7 +23,8 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'users.CustomUser'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets'), # We do this so that django's collectstatic copies or our bundles to the STATIC_ROOT or syncs them to whatever storage we use.
+    os.path.join(BASE_DIR, 'assets'),  # We do this so that django's collectstatic copies or our bundles to the
+    # STATIC_ROOT or syncs them to whatever storage we use.
 )
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -76,9 +77,9 @@ WSGI_APPLICATION = 'skill_finder.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'skill_finder',
-        'USER': 'viral',
-        'PASSWORD': 'viral98',
+        'NAME': 'SF',
+        'USER': 'shahp98',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '5432',
     }
