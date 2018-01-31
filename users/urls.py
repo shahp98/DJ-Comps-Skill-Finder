@@ -8,4 +8,10 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/update/', views.update_profile, name='update_profile'),
     path('profile/<str:sap_id>/', views.view_profile, name='view_profile'),
+    path('requests/<str:sap_id>/', views.send_request, name='send_request'),
+    path('requests/<int:pk>/accept/', views.accept_request, name='accept_request'),
+    path('requests/<int:pk>/reject/', views.reject_request, name='reject_request'),
+    path('requests/<int:pk>/cancel/', views.cancel_request, name='cancel_request'),
+    path('search/', views.search, name='search'),
+    path('relationship/terminate/<int:pk>/', views.terminate_relationship, name='terminate_relationship'),
 ]

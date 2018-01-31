@@ -1,0 +1,13 @@
+<form action="" method="get">
+  <label for="{{ form.skill.id_for_label }}">Skills</label>
+  {{ filter.form.skill }}
+  <br>
+  <input type="submit">
+</form>
+
+{% for user in filter.qs %}
+ <a href="{% url 'users:view_profile' user.sap_id %}"><h1>{{ user.username }}</h1></a>
+ <p>{{ user.skill_1 }}</p>
+ <p>{{ user.skill_2 }}</p>
+ <p>{{ user.skill_3 }}</p>
+{% endfor %}
