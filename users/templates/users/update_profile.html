@@ -7,9 +7,29 @@
   Bio <input type="text" name="bio" value="{{ user.bio }}"><br>
   Year <input type="text" name="year" value="{{ user.year }}"><br>
   <!-- Need help here to decide what to show -->
-  Skill 1 <input type="text" name="skill_1"><br>
-  Skill 2 <input type="text" name="skill_2"><br>
-  Skill 3 <input type="text" name="skill_3"><br>
+  {% if user.year != 'FE' %}
+  Willing to be a Mentor?<br>
+  <input type="radio" name="is_mentor" value="False"> No<br>
+  <input type="radio" name="is_mentor" value="True" {% if request.user.is_mentor %}checked {% endif %}> Yes<br>
+  {% endif %}
+  Skill 1: <select name="skill_1">
+    {% for skill in skill_set %}
+        <option value="{{ skill.id }}">{{ skill.skill }}</option>
+    {% endfor %}
+    </select>
+
+  Skill 2: <select name="skill_2">
+    {% for skill in skill_set %}
+        <option value="{{ skill.id }}">{{ skill.skill }}</option>
+    {% endfor %}
+    </select>
+
+  Skill 3 <select name="skill_3">
+    {% for skill in skill_set %}
+        <option value="{{ skill.id }}">{{ skill.skill }}</option>
+    {% endfor %}
+    </select>
+
   Photo <input type="file" name="photo"><br>
   <input type="submit" value="Submit now">
 </form>

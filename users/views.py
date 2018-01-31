@@ -78,7 +78,7 @@ def register(request):
 
 
 @login_required(login_url='users:login')
-def view_profile(request, sap_id):
+def view_profile(request, sap_id,):
     user = get_object_or_404(CustomUser, sap_id=sap_id)
     requests_sent = user.requests_sent.filter(sender__sap_id=sap_id, accepted=False, rejected=False)
     requests_received = user.requests_received.filter(receiver__sap_id=sap_id, accepted=False, rejected=False)
@@ -92,7 +92,8 @@ def view_profile(request, sap_id):
 @login_required(login_url='users:login')
 def update_profile(request):
     if request.method != 'POST':
-        return render(request, 'users/update_profile.html', {})
+        skill_set = Skill.objects.all()
+        return render(request, 'users/update_profile.html', {'skill_set': skill_set})
     else:
         request.user.first_name = request.POST.get('first_name')
         request.user.last_name = request.POST.get('last_name')
@@ -189,7 +190,8 @@ def terminate_relationship(request, pk, template_name='#'):
             Relationship.objects.remove_relationship(pk)
             return redirect('users:view_profile', sap_id=request.user.sap_id)
         except (Relationship.DoesNotExist, CustomUser.DoesNotExist, Skill.DoesNotExist):
-            return render(request, 'users/profile.html', {'error_message': 'Relationship Does not Exist'})
+            return view_profile(request, request.user.sap_id, error_message = 'Relationship Does not Exist')
+            #return render(request, 'users/profile.html', {'error_message': 'Relationship Does not Exist'})
 
     return render(request, template_name, {'pk': pk})
 
