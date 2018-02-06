@@ -6,3 +6,5 @@ media/
 *env
 **/.idea/**
 *.iml
+**/node_modules/**
+*.pyc
