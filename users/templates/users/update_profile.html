@@ -9,26 +9,55 @@
   <!-- Need help here to decide what to show -->
   {% if user.year != 'FE' %}
   Willing to be a Mentor?<br>
-  <input type="radio" name="is_mentor" value="False"> No<br>
+  <input type="radio" name="is_mentor" value="False" {% if not request.user.is_mentor %}checked {% endif %}> No<br>
   <input type="radio" name="is_mentor" value="True" {% if request.user.is_mentor %}checked {% endif %}> Yes<br>
   {% endif %}
-  Skill 1: <select name="skill_1">
+  Skill 1: <select name="skill_1" >
+    <option value="-1">None</option>
     {% for skill in skill_set %}
-        <option value="{{ skill.id }}">{{ skill.skill }}</option>
+        <option value="{{ skill.id }}" {% if skill.id == user.skill_1.id %}selected="selected"{% endif %}>{{ skill.skill }}</option>
     {% endfor %}
     </select>
 
   Skill 2: <select name="skill_2">
+    <option value="-1">None</option>
     {% for skill in skill_set %}
-        <option value="{{ skill.id }}">{{ skill.skill }}</option>
+        <option value="{{ skill.id }}" {% if skill.id == user.skill_2.id %}selected="selected"{% endif %}>{{ skill.skill }}</option>
     {% endfor %}
     </select>
 
   Skill 3 <select name="skill_3">
+    <option value="-1">None</option>
+    {% for skill in skill_set %}
+        <option value="{{ skill.id }}" {% if skill.id == user.skill_3.id %}selected="selected"{% endif %}>{{ skill.skill }}</option>
+    {% endfor %}
+    </select><br>
+
+  Interest 1 <select name="interest_1">
+    <option value="-1">None</option>
     {% for skill in skill_set %}
         <option value="{{ skill.id }}">{{ skill.skill }}</option>
     {% endfor %}
-    </select>
+    </select><br>
+
+  Interest 2 <select name="interest_2">
+    <option value="-1">None</option>
+    {% for skill in skill_set %}
+        <option value="{{ skill.id }}">{{ skill.skill }}</option>
+    {% endfor %}
+    </select><br>
+
+  Interest 3 <select name="interest_3">
+    <option value="-1">None</option>
+    {% for skill in skill_set %}
+        <option value="{{ skill.id }}">{{ skill.skill }}</option>
+    {% endfor %}
+    </select><br>
+
+  Twitter <input type="url" name="twitter"><br>
+  Linkedin <input type="url" name="linkedin"><br>
+  Github <input type="url" name="github"><br>
+  Behance <input type="url" name="behance"><br>
 
   Photo <input type="file" name="photo"><br>
   <input type="submit" value="Submit now">

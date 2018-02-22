@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from datetime import datetime
-
+from django.urls import reverse
 
 # Creating a Skill model for allowing a user to have multiple unique skills
 class Skill(models.Model):
@@ -37,14 +37,30 @@ class CustomUser(AbstractUser):
     skill_1 = models.ForeignKey(Skill, on_delete=models.SET_NULL, null=True, blank=True, related_name='skill_1')
     skill_2 = models.ForeignKey(Skill, on_delete=models.SET_NULL, null=True, blank=True, related_name='skill_2')
     skill_3 = models.ForeignKey(Skill, on_delete=models.SET_NULL, null=True, blank=True, related_name='skill_3')
+    github_url = models.URLField(blank=True, null=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+    twitter_url = models.URLField(blank=True, null=True)
+    behance_url = models.URLField(blank=True, null=True)
+
+
+class Interest(models.Model):
+    interest = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name='skill_interests')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_interests')
+    is_now_skill = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.interest.skill
 
 
 class Project(models.Model):
     name = models.CharField(max_length=50)
     skills_used = models.ManyToManyField(Skill)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='creator')
     description = models.CharField(max_length=200, null=True, blank=True)
     link = models.URLField(null=False, blank=False)
+
+    def get_absolute_url(self):
+        return reverse('users:view_profile', kwargs={'pk': self.pk})
 
 
 class MentorRequest(models.Model):
