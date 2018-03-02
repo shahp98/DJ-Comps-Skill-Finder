@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -6,8 +7,12 @@ from django.urls import reverse
 from .models import CustomUser, Skill, MentorRequest, Relationship, Project, Interest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, UpdateView
 from itertools import chain
+from .forms import ProjectForm
+import json
+from django.forms.models import model_to_dict
+from django.core import serializers
 
 
 @ensure_csrf_cookie
@@ -85,6 +90,18 @@ def view_profile(request, sap_id):
                'projects': projects}
     return render(request, 'users/profile.html', context)
 
+'''
+
+
+@login_required(login_url='users:login')
+def view_profile(request, sap_id):
+    user = get_object_or_404(CustomUser, sap_id=sap_id)
+    interests = Interest.objects.filter(user__sap_id=sap_id)
+    projects = Project.objects.filter(creator__sap_id=sap_id)
+    context = {'user': user, 'interest': interests, 'projects': projects}
+    return render(request, 'users/profile.html', {'props': context})
+
+'''
 
 
 
@@ -112,7 +129,38 @@ def mentor(request):
 @login_required(login_url='users:login')
 def update_profile(request):
     if request.method != 'POST':
-        return render(request, 'users/update_profile.html', {})
+        skill_set = Skill.objects.all()
+        current_user = CustomUser.objects.get(sap_id=request.user.sap_id)
+        interests = Interest.objects.all().filter(user__sap_id=current_user.sap_id).order_by('-id')[:3]
+        interests = reversed(interests)
+        interest_id = []
+        skill_id = []
+        if interests:
+            for interest in interests:
+                interest_id.append(interest.interest.id)
+        if current_user.skill_1 is not None:
+            skill_id.append(current_user.skill_1.id)
+        if current_user.skill_2 is not None:
+            skill_id.append(current_user.skill_2.id)
+        if current_user.skill_3 is not None:
+            skill_id.append(current_user.skill_3.id)
+        print(current_user.__dict__)
+        current_user = model_to_dict(current_user)
+        print(current_user)
+        #current_user['last_login'] = current_user['last_login'].isoformat()
+        #current_user['date_joined'] = current_user['date_joined'].isoformat()
+        if current_user['photo']:
+            current_user['photo']=current_user['photo'].url
+        current_user = json.dumps(current_user, indent=4, default=str)
+        print(current_user)
+        # current_user = json.dumps({"cu": current_user})
+        # skill_id = json.dumps(skill_id)
+        # interest_id = json.dumps(interest_id)
+        # skill_set = json.dumps(skill_set)
+        context = {'user': current_user}
+        context = json.dumps(context)
+        print(context)
+        return render(request, 'users/update_profile.html', {'prop': context})
     else:
         request.user.first_name = request.POST.get('first_name')
         request.user.last_name = request.POST.get('last_name')
@@ -237,17 +285,17 @@ def create_project(request):
 
 
 
-# class UpdateProject(LoginRequiredMixin, UpdateView):
-#     template_name = 'users/project_form.html'
-#     form_class = ProjectForm
-#     model = Project
+class UpdateProject(LoginRequiredMixin, UpdateView):
+    template_name = 'users/project_form.html'
+    form_class = ProjectForm
+    model = Project
 
-#     def form_valid(self, form):
-#         self.object = form.save(commit=False)
-#         self.object.creator = self.request.user
-#         self.object.save()
-#         form.save_m2m()
-#         return redirect('users:view_profile', sap_id=self.request.user.sap_id)
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.creator = self.request.user
+        self.object.save()
+        form.save_m2m()
+        return redirect('users:view_profile', sap_id=self.request.user.sap_id)
 
 
 # @login_required
@@ -264,11 +312,11 @@ def create_project(request):
 #         return render(request, 'users/project_form.html', {'form': form, 'error': error})
 
 
-# @login_required
-# def delete_project(request, pk):
-#     project = get_object_or_404(Project, pk=pk)
-#     project.delete()
-#     return redirect('users:view_profile', sap_id=request.user.sap_id)
+@login_required
+def delete_project(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    project.delete()
+    return redirect('users:view_profile', sap_id=request.user.sap_id)
 
 
 def f7(seq):

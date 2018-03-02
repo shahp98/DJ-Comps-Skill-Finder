@@ -1,3 +1,4 @@
+<!--
 <form action="{% url 'users:update_profile' %}" enctype="multipart/form-data" method="POST">
   {% csrf_token %}
   First name <input type="text" name="first_name" value="{{ user.first_name }}"><br>
@@ -6,7 +7,7 @@
   SAP ID <input type="text" name="sap_id" value="{{ user.sap_id }}"><br>
   Bio <input type="text" name="bio" value="{{ user.bio }}"><br>
   Year <input type="text" name="year" value="{{ user.year }}"><br>
-  <!-- Need help here to decide what to show -->
+  &lt;!&ndash; Need help here to decide what to show &ndash;&gt;
   Skill 1 <input type="text" name="skill_1"><br>
   Skill 2 <input type="text" name="skill_2"><br>
   Skill 3 <input type="text" name="skill_3"><br>
@@ -20,4 +21,20 @@
 
 {% if sap_error %}
   <p>{{ sap_error }}</p>
+{% endif %}
+-->
+
+{% load render_bundle from webpack_loader %}
+{% load static %}
+<script>
+    //var props = unescape({{prop|safe}})
+    var props = {{prop|safe}}
+    console.log(props)
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+<div id="react-app"></div>
+    {% render_bundle 'main' %}
+{% if error %}
+  <p>{{ error }}</p>
 {% endif %}
