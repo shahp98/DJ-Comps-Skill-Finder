@@ -155,9 +155,9 @@ def update_profile(request):
         print(current_user)
         # current_user = json.dumps({"cu": current_user})
         # skill_id = json.dumps(skill_id)
-        # interest_id = json.dumps(interest_id)
-        # skill_set = json.dumps(skill_set)
-        context = {'user': current_user}
+        interest_id = json.dumps(interest_id)
+        skill_set = json.dumps(skill_set)
+        context = {'user': current_user, 'skills': skill_set, 'interests': interest_id}
         context = json.dumps(context)
         print(context)
         return render(request, 'users/update_profile.html', {'prop': context})
